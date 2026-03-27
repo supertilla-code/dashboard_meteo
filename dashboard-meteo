@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="theme-color" content="#00ff41">
+    <title>⚡CYBER_METEO⚡</title>
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="CYBER_METEO">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* ============================================
+           CYBER SYNTHWAVE THEME - CYAN + MAGENTA + MATRIX GREEN
+           ============================================ */
+        :root {
+            --matrix:     #00ff41;
+            --cyan:       #00ffff;
+            --magenta:    #ff00ff;
+            --neon-pink:  #ff3366;
+            --deep-cyan:  #00ccff;
+            --purple:     #aa00ff;
+            --bg-dark:    #0a0a0f;
+            --bg-darker:  #050508;
+            --bg-card:    #111117;
+            --warning:    #ffcc00;
+            --glow-matrix: 0 0 12px rgba(0,255,65,0.5);
+            --glow-cyan:   0 0 12px rgba(0,255,255,0.5);
+            --glow-magenta: 0 0 12px rgba(255,0,255,0.5);
+            --grid:       2px rgba(0,255,255,0.1);
+            --transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--bg-dark);
+            color: var(--matrix);
+            background-image:
+                linear-gradient(var(--grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+            background-size: 24px 24px;
+            animation: gridScroll 20s linear infinite;
+        }
+
+        body {
+            padding: 0;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        @keyframes gridScroll {
+            from { background-position: 0 0; }
+            to   { background-position: 24px 24px; }
+        }
+
+        .app-container {
+            max-width: 500px;
+            margin: 0 auto;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── HEADER ── */
+        .cyber-header {
+            background: rgba(5,5,8,0.97);
+            border-bottom: 2px solid;
+            border-image: linear-gradient(90deg, var(--matrix), var(--cyan), var(--magenta)) 1;
+            border-bottom-style: solid;
+            padding: 0.8rem 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 20px rgba(0,255,255,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            backdrop-filter: blur(8px);
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--matrix) 0%, var(--cyan) 40%, var(--magenta) 70%, var(--neon-pink) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+            animation: pulse 2s ease-in-out infinite;
+            text-shadow: 0 0 8px rgba(0,255,255,0.3);
+        }
+
+        @keyframes pulse {
+            0%,100% { opacity: 1; filter: drop-shadow(0 0 2px var(--cyan)); }
+            50%      { opacity: 0.8; filter: drop-shadow(0 0 8px var(--magenta)); }
+        }
+
+        .header-time {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.75rem;
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+
+        /* ── HERO ── */
+        .hero {
+            padding: 1.2rem 1rem 1rem;
+            background: linear-gradient(180deg, #0a0a0f 0%, #050508 100%);
+            border-bottom: 1px solid rgba(0,255,255,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute; inset: 0;
+            background:
+                radial-gradient(circle at 25% 50%, rgba(0,255,255,0.08) 0%, transparent 55%),
+                radial-gradient(circle at 75% 30%, rgba(255,0,255,0.05) 0%, transparent 50%);
+            animation: heroGlow 5s ease-in-out infinite;
+        }
+
+        @keyframes heroGlow {
+            0%,100% { opacity: 0.6; }
+            50%      { opacity: 1; }
+        }
+
+        .hero-inner {
+            position: relative;
+            z-index: 1;
+        }
+
+        .location-row {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            color: #8b949e;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
+
+        .location-row i { color: var(--cyan); }
+        .location-row span { background: linear-gradient(135deg, var(--cyan), var(--matrix)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .temp-block {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .temp-main {
+            display: flex;
+            align-items: baseline;
+            gap: 0.25rem;
+        }
+
+        .temp-big {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            line-height: 1;
+            background: linear-gradient(135deg, var(--matrix), var(--cyan));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(0,255,255,0.3);
+        }
+
+        .temp-unit {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            color: var(--magenta);
+        }
+
+        .weather-desc {
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .weather-icon-big {
+            font-size: 3rem;
+            animation: iconFloat 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 8px var(--magenta));
+        }
+
+        @keyframes iconFloat {
+            0%,100% { transform: translateY(0); filter: drop-shadow(0 0 5px var(--cyan)); }
+            50%      { transform: translateY(-6px); filter: drop-shadow(0 0 15px var(--magenta)); }
+        }
+
+        .feels-row {
+            font-size: 0.7rem;
+            font-family: 'Share Tech Mono', monospace;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .feels-row span { color: #8b949e; }
+        .feels-row span span { background: linear-gradient(135deg, var(--matrix), var(--cyan)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; font-weight: bold; }
+
+        /* ── STATS ROW ── */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            border-top: 1px solid rgba(0,255,255,0.2);
+            border-bottom: 1px solid rgba(255,0,255,0.2);
+        }
+
+        .stat-mini {
+            background: rgba(17,17,23,0.9);
+            padding: 0.6rem 0.25rem;
+            text-align: center;
+            border-right: 1px solid rgba(0,255,255,0.1);
+            transition: var(--transition);
+        }
+        .stat-mini:hover { background: rgba(0,255,255,0.05); }
+
+        .stat-mini:last-child { border-right: none; }
+
+        .stat-mini .val {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--cyan), var(--matrix));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: block;
+        }
+
+        .stat-mini .lbl {
+            font-size: 0.6rem;
+            color: var(--magenta);
+            display: block;
+            margin-top: 4px;
+            letter-spacing: 1px;
+        }
+
+        .stat-mini .ico { font-size: 0.9rem; }
+
+        /* ── SECTION TITLE ── */
+        .sec-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 0.8rem 1rem 0.5rem;
+            border-bottom: 1px solid rgba(0,255,255,0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sec-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--magenta), var(--cyan), transparent);
+        }
+
+        /* ── FORECAST STRIP ── */
+        .forecast-strip {
+            padding: 0.75rem 1rem;
+            display: flex;
+            gap: 0.6rem;
+            overflow-x: auto;
+            scrollbar-width: thin;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .fc-item {
+            flex-shrink: 0;
+            background: var(--bg-card);
+            border: 1px solid;
+            border-image: linear-gradient(135deg, var(--cyan), var(--magenta)) 1;
+            border-style: solid;
+            border-radius: 10px;
+            padding: 0.5rem 0.7rem;
+            text-align: center;
+            min-width: 60px;
+            transition: var(--transition);
+        }
+
+        .fc-item.active {
+            border-color: var(--matrix);
+            box-shadow: 0 0 12px rgba(0,255,255,0.4), 0 0 8px rgba(255,0,255,0.3);
+            background: linear-gradient(135deg, rgba(0,255,255,0.1), rgba(255,0,255,0.05));
+        }
+
+        .fc-item .fc-time {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--cyan);
+        }
+
+        .fc-item .fc-icon { font-size: 1.3rem; display: block; margin: 4px 0; filter: drop-shadow(0 0 4px var(--magenta)); }
+        .fc-item .fc-temp {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--matrix);
+        }
+
+        /* ── CHART ── */
+        .chart-wrap {
+            padding: 0.5rem 1rem;
+            background: rgba(17,17,23,0.6);
+        }
+
+        .chart-inner {
+            height: 100px;
+            border: 1px solid rgba(0,255,255,0.2);
+            border-radius: 8px;
+            padding: 6px;
+            background: rgba(5,5,8,0.5);
+        }
+
+        /* ── INFO CARDS ── */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.7rem;
+            padding: 0.75rem 1rem;
+        }
+
+        .info-card {
+            background: var(--bg-card);
+            border: 1px solid;
+            border-image: linear-gradient(135deg, var(--cyan), var(--magenta)) 1;
+            border-style: solid;
+            border-radius: 10px;
+            padding: 0.8rem;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--cyan), var(--magenta), var(--matrix));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: var(--transition);
+        }
+
+        .info-card:hover::before { transform: scaleX(1); }
+        .info-card:hover {
+            border-color: var(--cyan);
+            box-shadow: 0 0 15px rgba(0,255,255,0.2), 0 0 8px rgba(255,0,255,0.2);
+        }
+
+        .ic-label {
+            font-size: 0.6rem;
+            color: var(--magenta);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.3rem;
+        }
+
+        .ic-val {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--cyan), var(--matrix));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .ic-sub {
+            font-size: 0.6rem;
+            color: var(--cyan);
+            margin-top: 2px;
+        }
+
+        .ic-icon {
+            position: absolute;
+            top: 0.6rem;
+            right: 0.6rem;
+            font-size: 1.3rem;
+            opacity: 0.4;
+            color: var(--magenta);
+        }
+
+        /* ── MAREAS ── */
+        .mareas-section { padding: 0.5rem 1rem 0.75rem; }
+
+        .marea-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 0.7rem;
+            border-radius: 8px;
+            margin-bottom: 0.4rem;
+            background: rgba(17,17,23,0.7);
+            border-left: 3px solid;
+            font-size: 0.75rem;
+            transition: var(--transition);
+        }
+
+        .marea-row.alta { border-left-color: var(--cyan); }
+        .marea-row.baja { border-left-color: var(--magenta); }
+        .marea-row:hover { background: rgba(0,255,255,0.05); }
+
+        .marea-tipo {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--cyan);
+        }
+        .marea-row.baja .marea-tipo { color: var(--magenta); }
+
+        .marea-hora { color: #8b949e; font-size: 0.7rem; }
+        .marea-altura {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        .marea-row.alta .marea-altura { color: var(--cyan); }
+        .marea-row.baja .marea-altura { color: var(--magenta); }
+
+        /* ── ÍNDICE PESCA ── */
+        .fishing-index { padding: 0.5rem 1rem 0.75rem; }
+
+        .fish-bar-wrap {
+            background: rgba(17,17,23,0.8);
+            border: 1px solid;
+            border-image: linear-gradient(135deg, var(--cyan), var(--magenta)) 1;
+            border-style: solid;
+            border-radius: 12px;
+            padding: 0.8rem;
+        }
+
+        .fish-score-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.6rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .fish-score {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--cyan), var(--matrix), var(--magenta));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 12px rgba(0,255,255,0.4);
+        }
+
+        .fish-score-label {
+            font-size: 0.6rem;
+            color: var(--magenta);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .fish-badge {
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            color: var(--bg-darker);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 0.25rem 0.7rem;
+            border-radius: 20px;
+            letter-spacing: 1px;
+        }
+
+        .fish-bar-bg {
+            height: 10px;
+            background: rgba(0,255,255,0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .fish-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--magenta), var(--cyan), var(--matrix));
+            border-radius: 5px;
+            animation: barGrow 1.5s ease-out both;
+        }
+
+        .fish-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.6rem;
+        }
+
+        .fish-tag {
+            font-size: 0.6rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            background: rgba(0,255,255,0.1);
+            border: 1px solid rgba(255,0,255,0.3);
+            color: var(--cyan);
+        }
+
+        /* ── VIENTO CON ROSA DE 8 PUNTOS ── */
+        .wind-compass-wrap { padding: 0.5rem 1rem 0.75rem; }
+
+        .wind-inner {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+            background: var(--bg-card);
+            border: 1px solid;
+            border-image: linear-gradient(135deg, var(--cyan), var(--magenta)) 1;
+            border-style: solid;
+            border-radius: 12px;
+            padding: 0.8rem;
+        }
+
+        .compass-rose {
+            width: 80px;
+            height: 80px;
+            flex-shrink: 0;
+            position: relative;
+        }
+        
+        .compass-svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 5px var(--cyan));
+        }
+        
+        .wind-data { flex: 1; }
+
+        .wind-speed {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--cyan), var(--matrix));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        .wind-unit { font-size: 0.7rem; color: var(--magenta); }
+
+        .wind-dir-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--cyan);
+            margin-top: 0.3rem;
+        }
+
+        .wind-gust { font-size: 0.7rem; color: var(--neon-pink); margin-top: 0.2rem; }
+
+        /* ── STATUS BAR ── */
+        .status-bar {
+            padding: 0.5rem 1rem;
+            background: rgba(5,5,8,0.95);
+            border-top: 1px solid rgba(0,255,255,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.6rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .status-dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: var(--cyan);
+            box-shadow: 0 0 8px var(--cyan), 0 0 4px var(--magenta);
+            animation: blink 1s ease-in-out infinite;
+            display: inline-block;
+            margin-right: 0.3rem;
+        }
+
+        @keyframes blink {
+            0%,100% { opacity: 1; background: var(--cyan); }
+            50%      { opacity: 0.3; background: var(--magenta); }
+        }
+
+        .status-ok { color: var(--cyan); }
+        .status-info { color: var(--magenta); }
+
+        /* ── PARTICLE CANVAS ── */
+        #particleCanvas {
+            position: fixed; top:0; left:0;
+            width:100%; height:100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── FOOTER CORREGIDO ── */
+        .cyber-footer {
+            background: linear-gradient(180deg, #050508 0%, #0a0a0f 100%);
+            border-top: 2px solid;
+            border-image: linear-gradient(90deg, var(--cyan), var(--magenta), var(--matrix)) 1;
+            border-top-style: solid;
+            padding: 1rem;
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+
+        .footer-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--cyan), var(--magenta), var(--matrix));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-info {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--cyan);
+            margin: 0.3rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-info i {
+            color: var(--magenta);
+            margin-right: 0.2rem;
+        }
+
+        .footer-dev {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            margin: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            flex-direction: column;
+        }
+
+        .dev-line {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .dev-name {
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            font-size: 0.75rem;
+            animation: pulseText 1.5s ease-in-out infinite;
+        }
+
+        .ai-name {
+            background: linear-gradient(135deg, var(--matrix), var(--cyan));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            font-size: 0.75rem;
+        }
+
+        @keyframes pulseText {
+            0%,100% { opacity: 0.8; text-shadow: 0 0 2px var(--cyan); }
+            50% { opacity: 1; text-shadow: 0 0 8px var(--magenta); }
+        }
+
+        .footer-version {
+            font-size: 0.5rem;
+            color: #8b949e;
+            margin-top: 0.5rem;
+            font-family: 'Share Tech Mono', monospace;
+            border-top: 1px dashed rgba(0,255,255,0.2);
+            padding-top: 0.5rem;
+        }
+
+        .footer-sub {
+            font-size: 0.55rem;
+            color: var(--magenta);
+            margin-top: 0.3rem;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        .install-prompt {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.95);
+            border: 1px solid var(--cyan);
+            border-radius: 16px;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10000;
+            backdrop-filter: blur(12px);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+        }
+        .install-prompt button {
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            border: none;
+            padding: 8px 16px;
+            border-radius: 24px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            color: #000;
+            cursor: pointer;
+        }
+        
+        .fade-up { animation: fadeUp 0.6s ease-out both; }
+        @keyframes fadeUp { from { opacity:0; transform: translateY(16px); } to { opacity:1; transform: translateY(0); } }
+        
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,255,0.02) 2px, rgba(255,0,255,0.02) 4px);
+            pointer-events: none;
+            z-index: 9999;
+        }
+        
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: var(--bg-darker); }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(135deg, var(--cyan), var(--magenta)); border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+<canvas id="particleCanvas"></canvas>
+
+<div class="app-container">
+    <header class="cyber-header">
+        <div class="logo">⚡CYBER_METEO⚡</div>
+        <div class="header-time" id="clockDisplay">--:--:--</div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-inner">
+            <div class="location-row">
+                <i class="fas fa-location-dot"></i>
+                <span>El Puerto de Santa María</span>
+                <span>·</span>
+                <span>36.59°N 6.23°W</span>
+            </div>
+            <div class="temp-block">
+                <div class="temp-main">
+                    <div class="temp-big" id="mainTemp">--</div>
+                    <div class="temp-unit">°C</div>
+                </div>
+                <div class="weather-icon-big" id="mainIcon">⏳</div>
+            </div>
+            <div class="weather-desc" id="mainDesc">CARGANDO...</div>
+            <div class="feels-row">
+                <span>🌡️ Sensación: <span id="feelsLike">--</span>°C</span>
+                <span>📈 Máx: <span id="tempMax">--</span>°</span>
+                <span>📉 Mín: <span id="tempMin">--</span>°</span>
+            </div>
+        </div>
+    </section>
+
+    <div class="stats-row">
+        <div class="stat-mini fade-up"><span class="ico">💧</span><span class="val" id="humidity">--%</span><span class="lbl">HUMEDAD</span></div>
+        <div class="stat-mini fade-up"><span class="ico">🌬️</span><span class="val" id="windSpeed">-- km/h</span><span class="lbl">VIENTO</span></div>
+        <div class="stat-mini fade-up"><span class="ico">🌊</span><span class="val" id="waveHeight">-- m</span><span class="lbl">OLA</span></div>
+        <div class="stat-mini fade-up"><span class="ico">☀️</span><span class="val" id="uvIndex">UV --</span><span class="lbl">UV INDEX</span></div>
+    </div>
+
+    <div class="sec-title">📅 FORECAST 24H</div>
+    <div class="forecast-strip" id="forecastStrip"></div>
+
+    <div class="sec-title">📈 TEMPERATURA 24H</div>
+    <div class="chart-wrap"><div class="chart-inner"><canvas id="tempChart"></canvas></div></div>
+
+    <div class="sec-title">⚙️ DATOS ATMOSFÉRICOS</div>
+    <div class="cards-grid">
+        <div class="info-card fade-up"><i class="fas fa-gauge ic-icon"></i><div class="ic-label">PRESIÓN</div><div class="ic-val" id="pressure">--</div><div class="ic-sub">hPa</div></div>
+        <div class="info-card fade-up"><i class="fas fa-eye ic-icon"></i><div class="ic-label">VISIBILIDAD</div><div class="ic-val" id="visibility">--</div><div class="ic-sub">km</div></div>
+        <div class="info-card fade-up"><i class="fas fa-cloud-rain ic-icon"></i><div class="ic-label">PRECIPIT.</div><div class="ic-val" id="rain">--</div><div class="ic-sub">mm/h</div></div>
+        <div class="info-card fade-up"><i class="fas fa-cloud ic-icon"></i><div class="ic-label">NUBES</div><div class="ic-val" id="clouds">--%</div><div class="ic-sub">cobertura</div></div>
+        <div class="info-card fade-up"><i class="fas fa-sun ic-icon"></i><div class="ic-label">AMANECER</div><div class="ic-val" id="sunrise">--:--</div><div class="ic-sub">hora local</div></div>
+        <div class="info-card fade-up"><i class="fas fa-moon ic-icon"></i><div class="ic-label">ATARDECER</div><div class="ic-val" id="sunset">--:--</div><div class="ic-sub">hora local</div></div>
+    </div>
+
+    <div class="sec-title">🌬️ VIENTO DETALLADO</div>
+    <div class="wind-compass-wrap">
+        <div class="wind-inner">
+            <div class="compass-rose">
+                <svg class="compass-svg" viewBox="0 0 100 100">
+                    <defs>
+                        <linearGradient id="gradRose" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#00ffff"/>
+                            <stop offset="100%" stop-color="#ff00ff"/>
+                        </linearGradient>
+                    </defs>
+                    <circle cx="50" cy="50" r="45" fill="rgba(17,17,23,0.9)" stroke="url(#gradRose)" stroke-width="1.5"/>
+                    <!-- Cardinales en CIAN -->
+                    <text x="50" y="14" fill="#00ffff" font-size="9" font-family="Orbitron" text-anchor="middle" font-weight="bold">N</text>
+                    <text x="86" y="50" fill="#00ffff" font-size="8" font-family="Orbitron" text-anchor="middle">E</text>
+                    <text x="50" y="92" fill="#00ffff" font-size="9" font-family="Orbitron" text-anchor="middle">S</text>
+                    <text x="14" y="50" fill="#00ffff" font-size="8" font-family="Orbitron" text-anchor="middle">W</text>
+                    <!-- Intercardinales en MAGENTA -->
+                    <text x="70" y="20" fill="#ff00ff" font-size="7" font-family="Orbitron" text-anchor="middle">NE</text>
+                    <text x="80" y="70" fill="#ff00ff" font-size="7" font-family="Orbitron" text-anchor="middle">SE</text>
+                    <text x="30" y="80" fill="#ff00ff" font-size="7" font-family="Orbitron" text-anchor="middle">SW</text>
+                    <text x="20" y="30" fill="#ff00ff" font-size="7" font-family="Orbitron" text-anchor="middle">NW</text>
+                    <!-- Líneas de dirección -->
+                    <line x1="50" y1="18" x2="50" y2="82" stroke="rgba(0,255,255,0.2)" stroke-width="0.8"/>
+                    <line x1="18" y1="50" x2="82" y2="50" stroke="rgba(255,0,255,0.2)" stroke-width="0.8"/>
+                    <line x1="32" y1="32" x2="68" y2="68" stroke="rgba(0,255,65,0.15)" stroke-width="0.6"/>
+                    <line x1="68" y1="32" x2="32" y2="68" stroke="rgba(0,255,65,0.15)" stroke-width="0.6"/>
+                    <!-- Aguja -->
+                    <g id="compassNeedle" transform="rotate(0,50,50)">
+                        <polygon points="50,20 45,50 50,48 55,50" fill="#ff00ff"/>
+                        <polygon points="50,80 45,50 50,52 55,50" fill="#00ffff"/>
+                    </g>
+                    <circle cx="50" cy="50" r="4" fill="url(#gradRose)"/>
+                </svg>
+            </div>
+            <div class="wind-data">
+                <div class="wind-speed"><span id="windSpeedDetail">--</span><span class="wind-unit"> km/h</span></div>
+                <div class="wind-dir-label">DIR: <span id="windDir">--</span></div>
+                <div class="wind-gust">⚡ Racha: <span id="windGust">--</span> km/h</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sec-title">🌊 MAREAS HOY</div>
+    <div class="mareas-section" id="mareasContainer"></div>
+
+    <div class="sec-title">🎣 ÍNDICE PESCA</div>
+    <div class="fishing-index">
+        <div class="fish-bar-wrap">
+            <div class="fish-score-row">
+                <div><div class="fish-score" id="fishScore">--</div><div class="fish-score-label">ÍNDICE PESCA NOCTURNA</div></div>
+                <div class="fish-badge" id="fishBadge">--</div>
+            </div>
+            <div class="fish-bar-bg"><div class="fish-bar-fill" id="fishBar" style="width:0%"></div></div>
+            <div class="fish-tags" id="fishTags"></div>
+        </div>
+    </div>
+
+    <div class="status-bar">
+        <div class="status-ok"><span class="status-dot"></span>SISTEMA ACTIVO</div>
+        <div class="status-info" id="lastUpdate">Actualizando...</div>
+        <div class="status-ok">BAHÍA CÁDIZ</div>
+    </div>
+
+    <!-- FOOTER CORREGIDO - SIN ESP32 NI TEXTO EXTRA -->
+    <footer class="cyber-footer">
+        <div class="footer-logo">
+            <i class="fas fa-bolt"></i> CYBER_METEO <i class="fas fa-cloud-moon"></i>
+        </div>
+        <div class="footer-info">
+            <span><i class="fas fa-map-marker-alt"></i> El Puerto de Santa María | 36.59°N 6.23°W</span>
+            <span><i class="fas fa-waveform"></i> Estación Meteorológica Cibernética</span>
+        </div>
+        <div class="footer-dev">
+            <div class="dev-line">
+                <span>🍌🐵</span>
+                <span class="dev-name">DESARROLLADO POR SUPERTILLA@DEV</span>
+                <span>🐵🍌</span>
+            </div>
+            <div class="dev-line">
+                <span><i class="fas fa-code"></i></span>
+                <span class="ai-name">CON LA COLABORACIÓN DE DEEPSEEK 🐋 AI</span>
+                <span><i class="fas fa-robot"></i></span>
+            </div>
+        </div>
+        <div class="footer-sub">
+            <i class="fas fa-microchip"></i> OPEN-METEO API · CYBER SYNTHWAVE EDITION
+        </div>
+        <div class="footer-version">
+            ⚡CYBER_METEO⚡
+        </div>
+    </footer>
+</div>
+
+<script>
+const LAT = 36.59, LON = -6.23;
+function updateClock() { document.getElementById('clockDisplay').textContent = new Date().toLocaleTimeString('es-ES', { hour12: false }); }
+setInterval(updateClock, 1000); updateClock();
+
+(function initParticles() {
+    const canvas = document.getElementById('particleCanvas'), ctx = canvas.getContext('2d');
+    let W, H, particles = [];
+    function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+    class Particle { constructor() { this.reset(); } reset() { this.x = Math.random() * W; this.y = Math.random() * H; this.vx = (Math.random() - 0.5) * 0.3; this.vy = (Math.random() - 0.5) * 0.3; this.r = Math.random() * 1.5 + 0.5; this.a = Math.random() * 0.4 + 0.1; this.color = Math.random() > 0.5 ? '#00ffff' : '#ff00ff'; } update() { this.x += this.vx; this.y += this.vy; if (this.x < 0 || this.x > W) this.vx *= -1; if (this.y < 0 || this.y > H) this.vy *= -1; } draw() { ctx.globalAlpha = this.a; ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2); ctx.fill(); } }
+    resize();
+    for (let i = 0; i < 50; i++) particles.push(new Particle());
+    function loop() { ctx.clearRect(0, 0, W, H); particles.forEach(p => { p.update(); p.draw(); }); ctx.globalAlpha = 1; requestAnimationFrame(loop); }
+    loop(); window.addEventListener('resize', resize);
+})();
+
+function getWeatherIcon(code) { const map = {0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',51:'🌦️',53:'🌦️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',71:'❄️',73:'❄️',75:'❄️',80:'🌦️',81:'🌦️',82:'⛈️',95:'⛈️',96:'⛈️',99:'⛈️'}; return map[code] || '🌡️'; }
+function getWeatherDesc(code) { const map = {0:'DESPEJADO',1:'CASI DESPEJADO',2:'PARCIALMENTE NUBLADO',3:'NUBLADO',45:'NIEBLA',48:'NIEBLA HELADA',51:'LLOVIZNA LIGERA',53:'LLOVIZNA',55:'LLOVIZNA INTENSA',61:'LLUVIA LIGERA',63:'LLUVIA',65:'LLUVIA FUERTE',71:'NEVADA LIGERA',73:'NEVADA',75:'NEVADA FUERTE',80:'CHUBASCOS',81:'CHUBASCOS FUERTES',82:'CHUBASCOS VIOLENTOS',95:'TORMENTA',96:'TORMENTA CON GRANIZO',99:'TORMENTA FUERTE'}; return map[code] || 'VARIABLE'; }
+function degToDir8(deg) { const dirs = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']; return dirs[Math.round(deg / 45) % 8]; }
+function generateTides() { const tides = [{ tipo:'PLEAMAR', hora:'06:22', altura:2.85, estado:'alta'},{ tipo:'BAJAMAR', hora:'12:48', altura:0.42, estado:'baja'},{ tipo:'PLEAMAR', hora:'18:55', altura:2.71, estado:'alta'},{ tipo:'BAJAMAR', hora:'01:15', altura:0.38, estado:'baja'}]; const cont = document.getElementById('mareasContainer'); cont.innerHTML = ''; tides.forEach(t => { const div = document.createElement('div'); div.className = `marea-row ${t.estado}`; div.innerHTML = `<span class="marea-tipo">${t.estado === 'alta' ? '🔼' : '🔽'} ${t.tipo}</span><span class="marea-hora">${t.hora}</span><span class="marea-altura">${t.altura}m</span>`; cont.appendChild(div); }); }
+function calcFishingIndex(data) { const wind = data.current.wind_speed_10m, wave = 0.8, clouds = data.current.cloud_cover, hour = new Date().getHours(), isNight = hour < 6 || hour > 20; let score = 70; if (wind < 15) score += 10; else if (wind > 30) score -= 15; if (wave < 1.2) score += 8; if (isNight) score += 12; if (clouds > 70) score -= 5; score = Math.max(10, Math.min(99, score)); document.getElementById('fishScore').textContent = score; document.getElementById('fishBar').style.width = score + '%'; const badge = score >= 80 ? '🔥 EXCELENTE' : score >= 60 ? '✅ BUENO' : score >= 40 ? '⚠️ REGULAR' : '❌ MALO'; document.getElementById('fishBadge').textContent = badge; const tags = ['🎣 Spinning', '🐟 Lubina', '🦑 Choco']; if (isNight) tags.push('🌙 Nocturno', '💡 LED'); if (wave < 1) tags.push('🌊 Mar Llana'); document.getElementById('fishTags').innerHTML = tags.map(t => `<span class="fish-tag">${t}</span>`).join(''); }
+let tempChartInstance = null;
+function renderTempChart(hours, temps) { const canvas = document.getElementById('tempChart'), ctx = canvas.getContext('2d'); const grad = ctx.createLinearGradient(0, 0, 0, 100); grad.addColorStop(0, 'rgba(0,255,255,0.45)'); grad.addColorStop(1, 'rgba(255,0,255,0)'); if (tempChartInstance) tempChartInstance.destroy(); tempChartInstance = new Chart(ctx, { type: 'line', data: { labels: hours, datasets: [{ data: temps, borderColor: '#00ffff', backgroundColor: grad, borderWidth: 2, pointBackgroundColor: '#ff00ff', pointBorderColor: '#00ff41', pointRadius: 3, fill: true, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed.y + '°C' } } }, scales: { y: { grid: { color: 'rgba(0,255,255,0.07)' }, ticks: { color: '#00ffff', font: { size: 9 } } }, x: { ticks: { color: '#ff00ff', font: { size: 8 } } } } } }); }
+function renderForecast(hourly) { const now = new Date(), strip = document.getElementById('forecastStrip'); strip.innerHTML = ''; let count = 0; for (let i = 0; i < hourly.time.length && count < 12; i++) { const t = new Date(hourly.time[i]); if (t < now) continue; const div = document.createElement('div'); div.className = 'fc-item' + (count === 0 ? ' active' : ''); div.innerHTML = `<div class="fc-time">${t.getHours().toString().padStart(2,'0')}h</div><span class="fc-icon">${getWeatherIcon(hourly.weather_code[i])}</span><div class="fc-temp">${Math.round(hourly.temperature_2m[i])}°</div>`; strip.appendChild(div); count++; } }
+function setCompassNeedle(deg) { document.getElementById('compassNeedle').setAttribute('transform', `rotate(${deg},50,50)`); }
+async function fetchWeather() { try { const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m,cloud_cover,pressure_msl,visibility,precipitation&hourly=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max&timezone=Europe%2FMadrid&forecast_days=2`; const res = await fetch(url); const data = await res.json(); const cur = data.current, dai = data.daily, hou = data.hourly; document.getElementById('mainTemp').textContent = Math.round(cur.temperature_2m); document.getElementById('feelsLike').textContent = Math.round(cur.apparent_temperature); document.getElementById('tempMax').textContent = Math.round(dai.temperature_2m_max[0]); document.getElementById('tempMin').textContent = Math.round(dai.temperature_2m_min[0]); document.getElementById('mainDesc').textContent = getWeatherDesc(cur.weather_code); document.getElementById('mainIcon').textContent = getWeatherIcon(cur.weather_code); document.getElementById('humidity').textContent = cur.relative_humidity_2m + '%'; document.getElementById('windSpeed').textContent = Math.round(cur.wind_speed_10m) + ' km/h'; document.getElementById('waveHeight').textContent = '0.8m'; document.getElementById('uvIndex').textContent = 'UV ' + (dai.uv_index_max[0] || '--'); document.getElementById('pressure').textContent = Math.round(cur.pressure_msl); document.getElementById('visibility').textContent = Math.round(cur.visibility / 1000); document.getElementById('rain').textContent = (cur.precipitation || 0).toFixed(1); document.getElementById('clouds').textContent = cur.cloud_cover + '%'; document.getElementById('sunrise').textContent = dai.sunrise[0].slice(-5); document.getElementById('sunset').textContent = dai.sunset[0].slice(-5); document.getElementById('windSpeedDetail').textContent = Math.round(cur.wind_speed_10m); document.getElementById('windDir').textContent = degToDir8(cur.wind_direction_10m) + ' ' + Math.round(cur.wind_direction_10m) + '°'; document.getElementById('windGust').textContent = Math.round(cur.wind_gusts_10m); setCompassNeedle(cur.wind_direction_10m); data.current.wave_height = 0.8; calcFishingIndex(data); generateTides(); renderForecast(hou); const now = new Date(); const futureHours = hou.time.map((t, i) => ({ t: new Date(t), temp: hou.temperature_2m[i] })).filter(x => x.t >= now).slice(0, 24); renderTempChart(futureHours.map(x => x.t.getHours() + 'h'), futureHours.map(x => Math.round(x.temp))); document.getElementById('lastUpdate').textContent = 'UPD ' + new Date().toLocaleTimeString('es-ES', { hour:'2-digit', minute:'2-digit', hour12:false }); } catch (err) { console.error(err); document.getElementById('mainDesc').textContent = 'ERROR API'; setTimeout(fetchWeather, 30000); } }
+fetchWeather(); setInterval(fetchWeather, 5 * 60 * 1000);
+if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js').catch(() => {}); }
+</script>
+</body>
+</html>
